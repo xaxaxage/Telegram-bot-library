@@ -1,0 +1,12 @@
+Telegram bot library v2
+
+
+Added bot ability to send stickers
+
+Example:
+
+const Bot = new Bot(<token>)
+
+Bot.getMessage("message", () => {
+   Bot.sendSticker("sticker_id") // You can get sticker id with https://t.me/idstickerbot telegram bot 
+})

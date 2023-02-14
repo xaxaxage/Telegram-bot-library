@@ -19,10 +19,22 @@ class TelegramBot {
 
   sendMessage(messageText) {
     try {  
-      post({method: 'sendMessage', text: messageText, chat_id: this.data.message.chat.id}, this.url+'sendMessage')  
+      post({text: messageText, chat_id: this.data.message.chat.id}, this.url+'sendMessage')  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function sendMessage must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendMessage(messageText)})')
+      } else {
+        console.log(err.message)
+      }
+    }
+  }
+
+  sendSticker(stickerId) {
+    try {  
+      post({sticker: stickerId, chat_id: this.data.message.chat.id}, this.url+'sendSticker')  
+    } catch(err) {
+      if (err.message === "Cannot read properties of undefined (reading 'message')") {
+        console.error('Error: Function sendSticker must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendSticker(sticker_id)})')
       } else {
         console.log(err.message)
       }
