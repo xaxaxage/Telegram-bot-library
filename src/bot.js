@@ -11,7 +11,24 @@ class TelegramBot {
     this.chekingMessages = {}
     
     this.data = {}
+
+    this.commands = []
   }
+
+  setCommand(command, callBack) {
+    if (typeof command === 'string') {
+      this.chekingMessages[command] = callBack
+      this.commands.push(command)
+      
+      try {  
+        post([this.commands], this.url+'setMyCommands')  
+      } catch(err) {
+        console.log(err.message)
+      }
+    } else {
+      console.error('Error: Command must be a string')
+    }
+  } 
 
   getMessage(gettingText, callBack) {
     this.chekingMessages[gettingText] = callBack
@@ -29,9 +46,9 @@ class TelegramBot {
     }
   }
 
-  sendSticker(stickerId) {
+  sendSticker(sticker_id) {
     try {  
-      post({sticker: stickerId, chat_id: this.data.message.chat.id}, this.url+'sendSticker')  
+      post({sticker: sticker_id, chat_id: this.data.message.chat.id}, this.url+'sendSticker')  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function sendSticker must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendSticker(sticker_id)})')

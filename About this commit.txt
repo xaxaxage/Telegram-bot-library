@@ -1,12 +1,11 @@
-Telegram bot library v2
+Telegram bot library v3
 
 
-Added bot ability to send stickers
+Added bot ability to set command // Can be used to make commands menu (commands menu not available now, COMING SOON)
 
 Example:
 
 const Bot = new Bot(<token>)
-
-Bot.getMessage("message", () => {
-   Bot.sendSticker("sticker_id") // You can get sticker id with https://t.me/idstickerbot telegram bot 
+Bot.setCommand("command", () => {
+   FUNCTION BODY 
 })
