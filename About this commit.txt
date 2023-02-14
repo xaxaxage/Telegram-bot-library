@@ -1,11 +1,9 @@
-Telegram bot library v3
+Telegram bot library v4
 
 
-Added bot ability to set command // Can be used to make commands menu (commands menu not available now, COMING SOON)
+Added bot ability to set commands menu button
 
 Example:
 
 const Bot = new Bot(<token>)
-Bot.setCommand("command", () => {
-   FUNCTION BODY 
-})
+Bot.setChatMenu()

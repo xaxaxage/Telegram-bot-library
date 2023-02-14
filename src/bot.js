@@ -8,35 +8,45 @@ class TelegramBot {
     
     this.url = `https://api.telegram.org/bot${token}/`; // URL to send requsts
     
-    this.chekingMessages = {}
+    this.checkingMessages = {} 
     
     this.data = {}
 
     this.commands = []
   }
 
-  setCommand(command, callBack) {
+  setCommand(command, description, callBack) {
+    command = command[0] === '/' ? command : false
+
     if (typeof command === 'string') {
-      this.chekingMessages[command] = callBack
-      this.commands.push(command)
-      
+      this.checkingMessages[command] = callBack
+      this.commands.push({command: command, description: description})
+
       try {  
-        post([this.commands], this.url+'setMyCommands')  
+        post(this.url+'setMyCommands', {commands: this.commands})  
       } catch(err) {
         console.log(err.message)
       }
     } else {
-      console.error('Error: Command must be a string')
+      console.error('Error: Command must be a string or starting with /')
     }
   } 
 
+  async setChatMenu() {
+    try {
+      post(this.url+'setChatMenuButton')   
+    } catch(err) {
+      console.log(err.message)
+    }
+  }
+
   getMessage(gettingText, callBack) {
-    this.chekingMessages[gettingText] = callBack
+    this.checkingMessages[gettingText] = callBack
   }
 
   sendMessage(messageText) {
     try {  
-      post({text: messageText, chat_id: this.data.message.chat.id}, this.url+'sendMessage')  
+      post(this.url+'sendMessage', {text: messageText, chat_id: this.data.message.chat.id})  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function sendMessage must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendMessage(messageText)})')
@@ -48,7 +58,7 @@ class TelegramBot {
 
   sendSticker(sticker_id) {
     try {  
-      post({sticker: sticker_id, chat_id: this.data.message.chat.id}, this.url+'sendSticker')  
+      post(this.url+'sendSticker', {sticker: sticker_id, chat_id: this.data.message.chat.id})  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function sendSticker must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendSticker(sticker_id)})')
@@ -66,9 +76,9 @@ class TelegramBot {
         for (let i = 0; i < result.length; i++) {
           this.data = {...result[i]}  
           if (Object.keys(this.data).length) {
-            Object.keys(this.chekingMessages).forEach(element => {
+            Object.keys(this.checkingMessages).forEach(element => {
               if (element === this.data.message.text) {
-                this.chekingMessages[element]()
+                this.checkingMessages[element]()
               }
             });
           }
