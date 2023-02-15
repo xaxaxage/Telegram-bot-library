@@ -1,9 +1,10 @@
-Telegram bot library v4
+Telegram bot library v5
 
 
-Added bot ability to set commands menu button
+Added bot ability to set parse_mode
+Added Readme file
 
 Example:
 
 const Bot = new Bot(<token>)
-Bot.setChatMenu()
+Bot.sendMessage({messageText: message, parse_mode: parse_mode})

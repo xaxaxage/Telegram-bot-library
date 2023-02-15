@@ -15,10 +15,12 @@ class TelegramBot {
     this.commands = []
   }
 
-  setCommand(command, description, callBack) {
+  setCommand(props) {
+    let {command, description, callBack} = props
+
     command = command[0] === '/' ? command : false
 
-    if (typeof command === 'string') {
+    if (typeof command === 'string' && typeof description === 'string' && typeof callBack === 'function') {
       this.checkingMessages[command] = callBack
       this.commands.push({command: command, description: description})
 
@@ -28,7 +30,7 @@ class TelegramBot {
         console.log(err.message)
       }
     } else {
-      console.error('Error: Command must be a string or starting with /')
+      console.error('Error: Incorrect types')
     }
   } 
 
@@ -44,9 +46,11 @@ class TelegramBot {
     this.checkingMessages[gettingText] = callBack
   }
 
-  sendMessage(messageText) {
+  sendMessage(props) {
+    const {messageText, parse_mode} = props
+
     try {  
-      post(this.url+'sendMessage', {text: messageText, chat_id: this.data.message.chat.id})  
+      post(this.url+'sendMessage', {...{text: messageText, chat_id: this.data.message.chat.id}, ...!!parse_mode ? {parse_mode: parse_mode} : {}})  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function sendMessage must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendMessage(messageText)})')
