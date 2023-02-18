@@ -1,10 +1,3 @@
-Telegram bot library v5
+Telegram bot library v6
 
-
-Added bot ability to set parse_mode
-Added Readme file
-
-Example:
-
-const Bot = new Bot(<token>)
-Bot.sendMessage({messageText: message, parse_mode: parse_mode})
+Added bot ability to make and delete reply keyboards

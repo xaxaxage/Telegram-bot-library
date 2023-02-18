@@ -1,6 +1,5 @@
-import get from './telegramApi/get.js';
-import post from './telegramApi/post.js';
-
+import get from './requests/get.js';
+import post from './requests/post.js';
 
 class TelegramBot {
   constructor(token) {
@@ -13,12 +12,15 @@ class TelegramBot {
     this.data = {}
 
     this.commands = []
+
+    this.messageWithMarkup = ''
   }
 
   setCommand(props) {
     let {command, description, callBack} = props
 
     command = command[0] === '/' ? command : false
+    description = !description ? 'No description' : description
 
     if (typeof command === 'string' && typeof description === 'string' && typeof callBack === 'function') {
       this.checkingMessages[command] = callBack
@@ -34,7 +36,7 @@ class TelegramBot {
     }
   } 
 
-  async setChatMenu() {
+  setChatMenu() {
     try {
       post(this.url+'setChatMenuButton')   
     } catch(err) {
@@ -53,7 +55,7 @@ class TelegramBot {
       post(this.url+'sendMessage', {...{text: messageText, chat_id: this.data.message.chat.id}, ...!!parse_mode ? {parse_mode: parse_mode} : {}})  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
-        console.error('Error: Function sendMessage must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendMessage(messageText)})')
+        console.error('Error: Function sendMessage must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.sendMessage(messageText)})')
       } else {
         console.log(err.message)
       }
@@ -65,7 +67,52 @@ class TelegramBot {
       post(this.url+'sendSticker', {sticker: sticker_id, chat_id: this.data.message.chat.id})  
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
-        console.error('Error: Function sendSticker must be called only in getMessage function. Example: Bot.getMessage("message", () => {sendSticker(sticker_id)})')
+        console.error('Error: Function sendSticker must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.sendSticker(sticker_id)})')
+      } else {
+        console.log(err.message)
+      }
+    }
+  }
+
+  setReplyKeyboard(props) {
+    const {text, keyboard=[], is_persisent=false, resize_keyboard=false, one_time_keyboard=false, input_field_placeholder='', selective=false} = props
+
+    const markup = {keyboard, is_persisent, resize_keyboard, one_time_keyboard, input_field_placeholder, selective}
+    
+    try { 
+      post(this.url+'sendMessage', {text: text, chat_id: this.data.message.chat.id, reply_markup: markup})
+    } catch(err) {
+      if (err.message === "Cannot read properties of undefined (reading 'message')") {
+        console.error('Error: Function setReplyKeyboard must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.setReplyKeyboard(arguments)})')
+      } else {
+        console.log(err.message)
+      }
+    }
+  }
+
+  async replyKeyboardRemove(chat_id) {
+    try {
+      const res = await post(this.url+'sendMessage', {text: 'This message is deleting...', chat_id: this.data.message.chat.id, reply_markup: {remove_keyboard: true}})
+      await post(this.url+'deleteMessage', {chat_id: chat_id, message_id: res.data.result.message_id})
+    } catch(err) {
+      if (err.message === "Cannot read properties of undefined (reading 'chat')") {
+        console.error('Error: Function setReplyKeyboard must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.setReplyKeyboard(arguments)})')
+      } else {
+        console.log(err.message)
+      }
+    }
+  }
+
+  setInlineKeyboard() {
+    const {keyboard=[], is_persisent=false, resize_keyboard=false, one_time_keyboard=false, input_field_placeholder='', selective=false} = props
+
+    const markup = {keyboard, is_persisent, resize_keyboard, one_time_keyboard, input_field_placeholder, selective}
+    
+    try { 
+      post(this.url+'sendMessage', {text: 'Keyboard', chat_id: this.data.message.chat.id, reply_markup: markup})
+    } catch(err) {
+      if (err.message === "Cannot read properties of undefined (reading 'message')") {
+        console.error('Error: Function setReplyKeyboard must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.setReplyKeyboard(arguments)})')
       } else {
         console.log(err.message)
       }
