@@ -1,5 +1,8 @@
 <h1 align="center"><b>Telegram bot library</b></h1>
 
+<h3 align="center"><a href="https://core.telegram.org/bots/api">Telegram Documentation</a></h3>
+
+<hr>
 
 ### Class TelegramBot with constructor TelegramBot(***token***)
 
@@ -19,6 +22,7 @@
 **Bot.data.message.date** - Message date<br>
 **Bot.data.message.text** - Message text<br>
 
+<hr>
 
 ### Function getMessage
 
@@ -27,6 +31,7 @@ Takes two arguments: **gettingText**, **callBack**
 **gettingText** - Message bot has to answer (*string*) (*required*)<br>
 **callBack** - Function that bot has to call if gettingText was sent to bot (*function*) (*required*)<br>
 
+<hr>
 
 ### Function sendMessage
 
@@ -37,8 +42,9 @@ Takes one argument: ***Object*** with **messageText** and **parse_mode**
 **messageText** - Message to response (*string*) (*required)*<br>
 **parse_mode** - Parse mode (*string*) (*not required*)<br>
 
-###### Must be called only in getMessage or setCommand functions 
+###### Must be called only in getMessage or setCommand functions
 
+<hr>
 
 ### Function sendSticker
 
@@ -48,6 +54,7 @@ Takes one argument: **sticker_id**
 
 ###### Must be called only in getMessage or setCommand functions 
 
+<hr>
 
 ### Function setCommand 
 
@@ -57,8 +64,9 @@ Takes one argument: ***Object*** with **command**, **description** and **callBac
 
 **command** - Command to get (*string*) (*required*)<br>
 **description** - Description for command. If no description leave '' (*string*) (*required*)<br>
-**callBack** - Function that bot has to call if command was sent to bot (*function*)(*required*)<br>
+**callBack** - Function that bot has to call if command was sent to bot (*function*) (*required*)<br>
 
+<hr>
 
 ### Function setChatMenu
 
@@ -66,6 +74,7 @@ Takes no arguments
 
 Adding menu button to a telegram bot
 
+<hr>
 
 ### Function setReplyKeyboard
 
@@ -79,13 +88,13 @@ Takes one argument: ***Object*** with **text**, **keyboard**, **is_persisent**, 
 ###### Look at [documentation](https://core.telegram.org/bots/api#replykeyboardmarkup):
    &emsp;**is_persisent** (bool) (*not required*)<br>
    &emsp;**resize_keyboard** (bool) (*not required*)<br>
-   &emsp;**input_field_placeholder** (bool) (*not required*)<br>
+   &emsp;**input_field_placeholder** (string) (*not required*)<br>
    &emsp;**one_time_keyboard** (bool) (*not required*)<br>
    &emsp;**selective** (bool) (*not required*)<br>
 
-
 ###### Must be called only in getMessage or setCommand functions
 
+<hr>
 
 ### Function replyKeyboardRemove
 
@@ -95,6 +104,22 @@ Takes one argument: **chat_id**
 
 ###### Must be called only in getMessage or setCommand functions
 
+<hr>
+
+### Function setReplyKeyboard
+
+Takes one argument: ***Object*** with **text**, **keyboard**
+
+**Object** - *{text: messageText, keyboard: keyboard}*
+
+**text** - Message to send (*string*) (*required*)<br> 
+**keyboard** - Buttons of a keyboard (*Array of a buttons*) (*required*) 
+
+###### Look at [documentation](https://core.telegram.org/bots/api#inlinekeyboardmarkup):
+
+###### Must be called only in getMessage or setCommand functions
+
+<hr>
 
 ### Function polling
 
@@ -102,33 +127,66 @@ Takes no arguments
 
 Starts the bot
 
+<hr>
 
-# Example:
+<h1 align="center"><b>Example:</b></h1>
+
 ```javascript
 const Bot = new TelegramBot(token)
+
+// --sendMessage--------------------------------------------------------------------------
 
 Bot.getMessage('message', () => {
    Bot.sendMessage({messageText: 'message to send', parse_mode: 'parse mode'})
 })
 
+// --setCommand--------------------------------------------------------------------------
+
 Bot.setCommand({command: '/command', description: 'description', callBack: () => {
    Bot.sendMessage({messageText: 'message to send', parse_mode: 'parse mode'})
 }})
+
+// --sendSticker-------------------------------------------------------------------------
 
 Bot.getMessage('message2', () => {
    Bot.sendSticker('sticker id')
 })
 
+// --setChatMenu-------------------------------------------------------------------------
+
 Bot.setChatMenu()
 
+// --setReplyKeyboard--------------------------------------------------------------------
+
 Bot.getMessage('keyboard', () => {
-   Bot.setReplyKeyboard({text: 'Keyboard', keyboard: [['Button_row_1', 'Button_row_1'], ['Button_row_2', 'Button_row_2'], ['Button_row_3', 'Button_row_3']]})
+   const markup = 
+      [
+         ['Button1_row_1', 'Button2_row_1'], 
+         ['Button1_row_2', 'Button2_row_2'], 
+      ]
+
+   Bot.setReplyKeyboard({text: 'Keyboard', keyboard: markup})
 })
+
+// --replyKeyboardRemove-----------------------------------------------------------------
 
 Bot.getMessage('keyboard button message', () => {
    Bot.replyKeyboardRemove(Bot.data.message.chat.id)
 })
 
+// --setInlineKeyboard-------------------------------------------------------------------
+
+Bot.getMessage('inline keyboard', () => {
+   const markup = 
+      [
+         [{text: 'Button1_row1', url: 'url'}, {text: 'Button2_row1'}],
+         [{text: 'Button1_row2', url: 'url'}, {text: 'Button2_row2'}]
+      ]
+
+   Bot.setInlineKeyboard({text: 'Keyboard', keyboard: markup})
+})
+
+// --polling-----------------------------------------------------------------------------
+
 Bot.polling()
 ```
-

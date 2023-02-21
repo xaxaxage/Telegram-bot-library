@@ -14,20 +14,22 @@ class TelegramBot {
     this.commands = []
 
     this.messageWithMarkup = ''
+
+    this.menuButtonState = false
   }
 
   setCommand(props) {
     let {command, description, callBack} = props
-
+    
     command = command[0] === '/' ? command : false
     description = !description ? 'No description' : description
-
+    
     if (typeof command === 'string' && typeof description === 'string' && typeof callBack === 'function') {
       this.checkingMessages[command] = callBack
-      this.commands.push({command: command, description: description})
-
+      this.commands = [...this.commands, {command: command, description: description}]
+      
       try {  
-        post(this.url+'setMyCommands', {commands: this.commands})  
+        post(this.url+'setMyCommands', {commands: this.commands})
       } catch(err) {
         console.log(err.message)
       }
@@ -38,7 +40,9 @@ class TelegramBot {
 
   setChatMenu() {
     try {
-      post(this.url+'setChatMenuButton')   
+      setTimeout(() => {
+        post(this.url+'setChatMenuButton')
+      }, 150)
     } catch(err) {
       console.log(err.message)
     }
@@ -103,13 +107,13 @@ class TelegramBot {
     }
   }
 
-  setInlineKeyboard() {
-    const {keyboard=[], is_persisent=false, resize_keyboard=false, one_time_keyboard=false, input_field_placeholder='', selective=false} = props
+  setInlineKeyboard(props) {
+    const {text, keyboard} = props
 
-    const markup = {keyboard, is_persisent, resize_keyboard, one_time_keyboard, input_field_placeholder, selective}
+    const markup = {inline_keyboard: keyboard}
     
     try { 
-      post(this.url+'sendMessage', {text: 'Keyboard', chat_id: this.data.message.chat.id, reply_markup: markup})
+      post(this.url+'sendMessage', {text: text, chat_id: this.data.message.chat.id, reply_markup: markup})
     } catch(err) {
       if (err.message === "Cannot read properties of undefined (reading 'message')") {
         console.error('Error: Function setReplyKeyboard must be called only in getMessage or setCommand functions. Example: Bot.getMessage("message", () => {Bot.setReplyKeyboard(arguments)})')
