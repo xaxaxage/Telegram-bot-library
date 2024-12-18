@@ -1,6 +1,6 @@
 <h1 align="center"><b>Telegram bot library</b></h1>
 
-<h3 align="center"><a href="https://core.telegram.org/bots/api" target="_blank">Telegram Documentation</a></h3>
+<h3 align="center"><a href="https://core.telegram.org/bots/api">Telegram Documentation</a></h3>
 
 <hr>
 
