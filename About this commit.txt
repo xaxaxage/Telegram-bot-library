@@ -1,3 +1,0 @@
-Telegram bot library v7
-
-Added bot ability to make inline keyboards

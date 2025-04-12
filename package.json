@@ -1,6 +1,24 @@
 {
+  "name": "xaxaxage-telegrambot-library",
+  "version": "1.0.0",
+  "author": "George Mishchenko georgemishchenko@gmail.com",
   "type": "module",
   "dependencies": {
     "axios": "^1.3.2"
-  }
+  },
+  "description": "<h1 align=\"center\"><b>Telegram bot library</b></h1>",
+  "main": "src/botLib.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xaxaxage/Telegram-bot-library.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xaxaxage/Telegram-bot-library/issues"
+  },
+  "homepage": "https://github.com/xaxaxage/Telegram-bot-library#readme"
 }
