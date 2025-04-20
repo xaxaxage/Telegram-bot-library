@@ -1,3 +1,5 @@
 test.js
 testToken.js
 .git
+.gitignore
+.npmignore

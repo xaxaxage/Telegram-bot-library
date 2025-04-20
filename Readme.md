@@ -35,9 +35,7 @@ Takes two arguments: **gettingText**, **callBack**
 
 ### Function sendMessage
 
-Takes one argument: ***Object*** with **messageText** and **parse_mode** 
-
-**Object** - *{messageText: text, parse_mode: parse_mode}*
+Takes two arguments: **messageText** and **parse_mode** 
 
 **messageText** - Message to response (*string*) (*required)*<br>
 **parse_mode** - Parse mode (*string*) (*not required*)<br>
@@ -58,9 +56,7 @@ Takes one argument: **sticker_id**
 
 ### Function setCommand 
 
-Takes one argument: ***Object*** with **command**, **description** and **callBack** 
-
-**Object** - *{command: command, description: description, callBack: callBackfn}*
+Takes three arguments: **command**, **description** and **callBack** 
 
 **command** - Command to get (*string*) (*required*)<br>
 **description** - Description for command. If no description leave '' (*string*) (*required*)<br>
@@ -137,14 +133,14 @@ const Bot = new TelegramBot(token)
 // --sendMessage--------------------------------------------------------------------------
 
 Bot.getMessage('message', () => {
-   Bot.sendMessage({messageText: 'message to send', parse_mode: 'parse mode'})
+   Bot.sendMessage('message to send', 'parse mode')
 })
 
 // --setCommand--------------------------------------------------------------------------
 
-Bot.setCommand({command: '/command', description: 'description', callBack: () => {
-   Bot.sendMessage({messageText: 'message to send', parse_mode: 'parse mode'})
-}})
+Bot.setCommand('/command', 'description', () => {
+   Bot.sendMessage('message to send', 'parse mode')
+})
 
 // --sendSticker-------------------------------------------------------------------------
 

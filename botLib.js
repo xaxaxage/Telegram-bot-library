@@ -16,11 +16,15 @@ class TelegramBot {
     this.messageWithMarkup = ''
 
     this.menuButtonState = false
+
+    // try {  
+    //   post(this.url+'setMyCommands', {commands: []})
+    // } catch(err) {
+    //   console.log(err.message)
+    // }
   }
 
-  setCommand(props) {
-    let {command, description, callBack} = props
-    
+  setCommand(command, description, callBack) {    
     command = command[0] === '/' ? command : false
     description = !description ? 'No description' : description
     
@@ -40,9 +44,7 @@ class TelegramBot {
 
   setChatMenu() {
     try {
-      setTimeout(() => {
         post(this.url+'setChatMenuButton')
-      }, 150)
     } catch(err) {
       console.log(err.message)
     }
@@ -52,9 +54,7 @@ class TelegramBot {
     this.checkingMessages[gettingText] = callBack
   }
 
-  sendMessage(props) {
-    const {messageText, parse_mode} = props
-
+  sendMessage(messageText, parse_mode) {
     try {  
       post(this.url+'sendMessage', {...{text: messageText, chat_id: this.data.message.chat.id}, ...!!parse_mode ? {parse_mode: parse_mode} : {}})  
     } catch(err) {
@@ -79,7 +79,7 @@ class TelegramBot {
   }
 
   setReplyKeyboard(props) {
-    const {text, keyboard=[], is_persisent=false, resize_keyboard=false, one_time_keyboard=false, input_field_placeholder='', selective=false} = props
+    const { text, keyboard=[], is_persisent=false, resize_keyboard=false, one_time_keyboard=false, input_field_placeholder='', selective=false } = props
 
     const markup = {keyboard, is_persisent, resize_keyboard, one_time_keyboard, input_field_placeholder, selective}
     
@@ -107,9 +107,7 @@ class TelegramBot {
     }
   }
 
-  setInlineKeyboard(props) {
-    const {text, keyboard} = props
-
+  setInlineKeyboard(text, keyboard) {
     const markup = {inline_keyboard: keyboard}
     
     try { 
@@ -128,11 +126,12 @@ class TelegramBot {
       get(this.url+'getUpdates')
       .then((response) => {
         const result = response.data.result
+        console.log(result)
         for (let i = 0; i < result.length; i++) {
           this.data = {...result[i]}  
           if (Object.keys(this.data).length) {
             Object.keys(this.checkingMessages).forEach(element => {
-              if (element === this.data.message.text) {
+              if (this.data.message && element === this.data.message.text) {
                 this.checkingMessages[element]()
               }
             });
